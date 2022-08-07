@@ -24,21 +24,26 @@ bot_aux = Polish()
 async def on_message(message):
 
     log = bot_aux.channelCommands(message) 
-    if log == 1:
+    if log == True:
         await message.channel.send('Added new channel')
+        return
 
-    elif log == 0:
-        await message.channel.send('Invalid command')
+    elif log == False:
+        if bot_aux.validCommand(message) == False:
+            return
 
-    elif log == -1:
-        channels = bot_aux.getValidChannels()
-        currentChannel = bot_aux.getChannelName(message)
+    
+    channels = bot_aux.getValidChannels()
+    currentChannel = bot_aux.getChannelName(message)
 
-        for approvedChannel in channels:
-            if approvedChannel == currentChannel:
-                msg = bot_aux.getMessageContent(message)
-                font_msg = pyfiglet.figlet_format(msg)
-                await message.channel.send('<res>' + font_msg + '</res>')
+    for approvedChannel in channels:
+        if approvedChannel == currentChannel:
+            msg = bot_aux.retrieveExpression(message)
+            font_msg = pyfiglet.figlet_format(msg)
+
+            embed = discord.Embed(title = 'New word', description = '```' + font_msg + '```')
+            
+            await message.channel.send(embed = embed)
             
 
 client.run(discord_key)
