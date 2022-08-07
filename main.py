@@ -41,9 +41,12 @@ async def on_message(message):
             msg = bot_aux.retrieveExpression(message)
             font_msg = pyfiglet.figlet_format(msg)
 
-            embed = discord.Embed(title = 'New word', description = '```' + font_msg + '```')
+            if len(msg) < 10:
+                embed = discord.Embed(title = 'New word', description = '```' + font_msg + '```')
+                await message.channel.send(embed = embed)
+            else:
+                await message.channel.send('```' + font_msg + '```')
             
-            await message.channel.send(embed = embed)
             
 
 client.run(discord_key)
